@@ -5,7 +5,7 @@ export default function Component() {
   if (status =='authenticated') {
     return (
       <>
-        Signed in as {session.user.name} <br />
+        Signed in as {session!.user!.name} <br />
         <button onClick={() => signOut()}>Sign out</button>
       </>
     )

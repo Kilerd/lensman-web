@@ -1,6 +1,6 @@
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 export default NextAuth({
     // Configure one or more authentication providers
     session: {
@@ -24,7 +24,7 @@ export default NextAuth({
                     user_data.name = user_data.username;
                     return user_data
 
-                } catch (e) {
+                } catch (e: any) {
                     console.log(e);
                     throw new Error(e.response.data.message + '&email=' + credentials.email)
                 }
