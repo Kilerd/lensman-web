@@ -8,17 +8,12 @@ export default NextAuth({
     },
     providers: [
         CredentialsProvider({
-            // The name to display on the sign in form (e.g. 'Sign in with...')
             name: 'Email',
-            // The credentials is used to generate a suitable form on the sign in page.
-            // You can specify whatever fields you are expecting to be submitted.
-            // e.g. domain, username, password, 2FA token, etc.
-            // You can pass any HTML attribute to the <input> tag through the object.
             credentials: {
                 email: { label: "Email", type: "email" },
                 password: { label: "Password", type: "password" }
             },
-            async authorize(credentials, req) {
+            async authorize(credentials: Record<string, string>, req) {
                 try {
                     let res = await axios.post('http://127.0.0.1:8000/users/authentication', {
                         email: credentials.email,
@@ -26,6 +21,7 @@ export default NextAuth({
                     })
                     console.log(res.data.data.token)
                     let user_data = res.data.data;
+                    user_data.name = user_data.username;
                     return user_data
 
                 } catch (e) {
@@ -37,11 +33,10 @@ export default NextAuth({
         })
     ],
     callbacks: {
-        async jwt({token, user, account, profile, isNewUser}) {
-            console.log("jwt callback", user, token,account, profile, isNewUser)
+        async jwt({ token, user, account, profile, isNewUser }) {
+            console.log("jwt callback", user, token, account, profile, isNewUser)
             if (user) {
                 token.accessToken = user.token
-                token.name = user.username
             }
             return token
         },
